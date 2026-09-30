@@ -216,9 +216,9 @@ export function createCube(canvas, { reduceMotion = false } = {}) {
     const viewH = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const viewW = viewH * camera.aspect;
     if (camera.aspect > 1) {
-      layout.x = viewW * 0.24;
-      layout.y = 0.55;
-      layout.scale = 0.95;
+      layout.x = viewW * 0.27;
+      layout.y = 0.6;
+      layout.scale = 0.72;
     } else {
       layout.x = 0;
       layout.y = 0.75;

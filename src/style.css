@@ -100,8 +100,11 @@ em {
 }
 .loader__mark circle {
   fill: var(--gold);
-  transform-origin: 44px 26px;
-  transform: scale(0);
+}
+/* começam invisíveis; o GSAP revela */
+.loader__mark,
+.loader__name {
+  opacity: 0;
 }
 .loader__name {
   font-family: var(--serif);
@@ -287,7 +290,8 @@ em {
 }
 .nav__mark circle {
   fill: var(--gold);
-  transform-origin: 44px 26px;
+  transform-box: fill-box;
+  transform-origin: center;
   transition: transform 0.6s var(--ease);
 }
 /* hover: o traço se redesenha e o ponto dourado pulsa */
