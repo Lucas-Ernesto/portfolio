@@ -84,6 +84,25 @@ em {
   align-content: center;
   gap: 24px;
 }
+.loader__mark {
+  width: 64px;
+  height: 64px;
+  overflow: visible;
+}
+.loader__mark path {
+  stroke: var(--bg);
+  stroke-width: 5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.loader__mark circle {
+  fill: var(--gold);
+  transform-origin: 44px 26px;
+  transform: scale(0);
+}
 .loader__name {
   font-family: var(--serif);
   font-size: clamp(40px, 7vw, 96px);
@@ -237,7 +256,6 @@ em {
 .nav.is-dark .lang .is-active {
   color: var(--bg);
 }
-.nav.is-dark .nav__mark,
 .nav.is-dark .btn--dark {
   background: var(--bg);
   color: var(--ink);
@@ -245,23 +263,62 @@ em {
 .nav.is-hidden {
   transform: translateY(-110%);
 }
+
+/* Logo: monograma LE (L e E num traço só) + nome com "Ernesto" em itálico */
 .nav__logo {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-weight: 600;
 }
 .nav__mark {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--bg);
-  display: grid;
-  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  overflow: visible;
+}
+.nav__mark path {
+  stroke: currentColor;
+  stroke-width: 6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.nav__mark circle {
+  fill: var(--gold);
+  transform-origin: 44px 26px;
+  transition: transform 0.6s var(--ease);
+}
+/* hover: o traço se redesenha e o ponto dourado pulsa */
+.nav__logo:hover .nav__mark path {
+  animation: drawMark 0.9s var(--ease) both;
+}
+.nav__logo:hover .nav__mark path:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.nav__logo:hover .nav__mark path:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.nav__logo:hover .nav__mark circle {
+  transform: scale(1.6);
+}
+@keyframes drawMark {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.nav__name {
   font-family: var(--serif);
-  font-size: 18px;
-  font-style: italic;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.nav__name em {
+  color: var(--gold);
 }
 .nav__links {
   display: flex;

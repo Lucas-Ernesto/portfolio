@@ -329,6 +329,8 @@ intro
     onUpdate: () => (countEl.textContent = Math.round(count.v)),
   })
   .to(".loader__bar span", { scaleX: 1, duration: reduceMotion ? 0.3 : 1.8, ease: "power2.inOut" }, "<")
+  .to(".loader__mark path", { strokeDashoffset: 0, duration: reduceMotion ? 0.3 : 0.8, stagger: 0.3, ease: "power2.inOut" }, "<")
+  .to(".loader__mark circle", { scale: 1, duration: 0.5, ease: "back.out(3)" }, "-=0.5")
   .to(".loader", { yPercent: -100, duration: 1, ease: "power4.inOut" })
   .add(() => {
     document.body.classList.remove("is-loading");

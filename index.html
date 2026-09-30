@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lucas Ernesto — Sites para negócios</title>
     <meta name="description" content="Lucas Ernesto cria sites e landing pages que fazem negócios crescerem." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,6 +18,12 @@
   <body class="is-loading">
     <!-- Loader -->
     <div class="loader" aria-hidden="true">
+      <svg class="loader__mark" viewBox="0 0 52 52">
+        <path d="M10 6 V46 H42" pathLength="1" />
+        <path d="M22 6 V26" pathLength="1" />
+        <path d="M22 6 H42 M22 26 H36" pathLength="1" />
+        <circle cx="44" cy="26" r="4" />
+      </svg>
       <div class="loader__name">Lucas <em>Ernesto</em></div>
       <div class="loader__count"><span class="js-count">0</span>%</div>
       <div class="loader__bar"><span></span></div>
@@ -34,8 +41,13 @@
     <!-- Nav -->
     <header class="nav">
       <a href="#top" class="nav__logo" data-magnetic>
-        <span class="nav__mark">LE</span>
-        <span class="nav__name">Lucas Ernesto</span>
+        <svg class="nav__mark" viewBox="0 0 52 52" aria-hidden="true">
+          <path d="M10 6 V46 H42" pathLength="1" />
+          <path d="M22 6 V26" pathLength="1" />
+          <path d="M22 6 H42 M22 26 H36" pathLength="1" />
+          <circle cx="44" cy="26" r="4" />
+        </svg>
+        <span class="nav__name">Lucas <em>Ernesto</em></span>
       </a>
       <nav class="nav__links">
         <a href="#sobre" data-i18n="nav.about">Sobre</a>
