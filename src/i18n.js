@@ -53,7 +53,7 @@ export const dict = {
     "footer.time": "Horário local",
     "footer.top": "Voltar ao topo ↑",
 
-    strip: ["Landing pages", "Sites institucionais", "Design responsivo", "Animações", "SEO", "Performance"],
+    strip: ["Landing pages", "Catálogos simples", "Design responsivo", "Animações", "SEO", "Performance"],
   },
   en: {
     "nav.about": "About",
@@ -109,7 +109,7 @@ export const dict = {
     "footer.time": "Local time",
     "footer.top": "Back to top ↑",
 
-    strip: ["Landing pages", "Business websites", "Responsive design", "Animations", "SEO", "Performance"],
+    strip: ["Landing pages", "Simple catalogs", "Responsive design", "Animations", "SEO", "Performance"],
   },
 };
 
