@@ -1,6 +1,6 @@
 // Projetos do portfólio. Pra adicionar um novo, é só adicionar um objeto nesta lista:
 //   theme:  cor da pasta → "orange" | "gold" | "silver"
-//   visual: o que sobe de dentro da pasta no hover → { type: "image", src } | { type: "star" } | { type: "plus" }
+//   visual: o que sobe de dentro da pasta no hover → { type: "image", src, width, height } | { type: "star" } | { type: "plus" }
 //   cursor: chave do texto que aparece no cursor (em content/pt.js e en.js)
 //   live:   true mostra a bolinha verde de "no ar"
 export const projects = [
@@ -10,7 +10,7 @@ export const projects = [
     href: "https://www.assistenciaprimetech.com.br/",
     external: true,
     live: true,
-    visual: { type: "image", src: "/img/primetech.png" },
+    visual: { type: "image", src: "/img/primetech.webp", width: 800, height: 500 },
     cursor: "cursor.visit",
     text: {
       pt: {

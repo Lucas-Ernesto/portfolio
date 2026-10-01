@@ -14,6 +14,10 @@
   pointer-events: none;
   z-index: 94;
 }
+/* só aparece depois do primeiro movimento do mouse (antes ficava parado no canto da tela) */
+html:not(.has-cursor) .cursor {
+  visibility: hidden;
+}
 .cursor {
   position: fixed;
   top: 0;

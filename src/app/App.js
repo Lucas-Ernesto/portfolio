@@ -1,26 +1,17 @@
 // App: junta Model → View → Controller
 //   1. Models  = dados (textos, projetos, stack, perfil, idioma)
-//   2. Views   = funções que transformam dados em HTML
+//   2. Views   = funções que transformam dados em HTML (montadas em app/render.js)
 //   3. Controllers = comportamento (scroll, cursor, animações, cliques)
 import { reduceMotion } from "../utils/motion.js";
+import { renderApp } from "./render.js";
 
 // Models
 import { t, getLang, toggleLang, onLangChange } from "../models/i18n.model.js";
 import { profile } from "../models/profile.model.js";
-import { projects } from "../models/projects.model.js";
-import { stackRows } from "../models/stack.model.js";
 
-// Views
+// Views que atualizam a tela quando o idioma muda
 import { applyTranslations } from "../views/i18n.view.js";
-import { LoaderView } from "../views/layout/LoaderView.js";
-import { CursorView } from "../views/layout/CursorView.js";
-import { NavView } from "../views/layout/NavView.js";
-import { HeroView } from "../views/sections/HeroView.js";
-import { StripView } from "../views/sections/StripView.js";
-import { AboutView } from "../views/sections/AboutView.js";
-import { WorkView } from "../views/sections/WorkView.js";
-import { StackView } from "../views/sections/StackView.js";
-import { ContactView } from "../views/sections/ContactView.js";
+import { updateStripView } from "../views/sections/StripView.js";
 
 // Controllers
 import { ScrollController } from "../controllers/ScrollController.js";
@@ -41,21 +32,17 @@ export class App {
     this.root = root;
   }
 
+  // No site publicado o HTML já vem pronto do build (mais rápido e melhor pro Google).
+  // Aqui só montamos se ele não veio (desenvolvimento) ou traduzimos se o idioma não é PT.
   render() {
     const lang = getLang();
+    if (!this.root.firstElementChild) {
+      this.root.innerHTML = renderApp({ t, lang });
+    } else if (lang !== "pt") {
+      applyTranslations(t, lang);
+      updateStripView(t);
+    }
     document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
-    this.root.innerHTML = `
-      ${LoaderView({ profile })}
-      ${CursorView()}
-      ${NavView({ t, lang, profile })}
-      <main id="top">
-        ${HeroView({ t })}
-        ${StripView({ t })}
-        ${AboutView({ t, profile })}
-        ${WorkView({ t, projects })}
-        ${StackView({ t, rows: stackRows })}
-        ${ContactView({ t, profile })}
-      </main>`;
   }
 
   start() {
@@ -70,13 +57,21 @@ export class App {
 
     new NavController({ scroll });
     new MagneticController();
-    new AboutController({ cursor, onLangChange, reduceMotion });
-    new RevealController();
-    new WorkController();
-    new MarqueeController({ scroll, t, onLangChange, reduceMotion });
-    new ContactController({ profile });
     new LanguageController({ toggleLang });
-
     new IntroController({ scroll, hero, reduceMotion }).play();
+
+    // seções abaixo da dobra: prepara quando o navegador estiver livre (não atrasa a abertura)
+    whenIdle(() => {
+      new MarqueeController({ scroll, t, onLangChange, reduceMotion });
+      new AboutController({ cursor, onLangChange, reduceMotion });
+      new RevealController();
+      new WorkController();
+      new ContactController({ profile });
+    });
   }
+}
+
+function whenIdle(fn) {
+  if ("requestIdleCallback" in window) requestIdleCallback(fn, { timeout: 1500 });
+  else setTimeout(fn, 200);
 }

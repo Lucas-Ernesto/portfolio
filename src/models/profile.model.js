@@ -9,7 +9,7 @@ export const profile = {
     { label: "GitHub", href: "https://github.com/Lucas-Ernesto" },
   ],
   photos: {
-    main: { src: "/img/ensaio.webp", altKey: "about.photoMainAlt" },
-    secondary: { src: "/img/elevador.webp", altKey: "about.photoSmallAlt" },
+    main: { src: "/img/ensaio.webp", width: 687, height: 1024, altKey: "about.photoMainAlt" },
+    secondary: { src: "/img/elevador.webp", width: 440, height: 586, altKey: "about.photoSmallAlt" },
   },
 };

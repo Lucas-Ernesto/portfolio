@@ -23,6 +23,9 @@ export const getLang = () => current;
 
 export const t = (key) => dictionaries[current][key] ?? dictionaries.pt[key] ?? key;
 
+// tradutor fixo num idioma (usado na pré-renderização do build)
+export const translator = (lang) => (key) => dictionaries[lang][key] ?? dictionaries.pt[key] ?? key;
+
 export function setLang(lang) {
   if (!(lang in dictionaries) || lang === current) return;
   current = lang;

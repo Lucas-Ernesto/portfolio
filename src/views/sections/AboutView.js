@@ -1,4 +1,5 @@
 import { SectionHead } from "../components/SectionHead.js";
+import { wordsHTML } from "../components/Words.js";
 
 const facts = [
   ["about.f1k", "about.f1v"],
@@ -28,7 +29,7 @@ export const AboutView = ({ t, profile }) => {
 
     <div class="about__grid">
       <div class="about__text">
-        <p class="about__big js-words" data-i18n="about.big">${t("about.big")}</p>
+        <p class="about__big js-words" data-i18n="about.big">${wordsHTML(t("about.big"))}</p>
         <p class="about__small" data-i18n="about.small">${t("about.small")}</p>
         <ul class="about__facts">
           ${facts
@@ -43,7 +44,7 @@ export const AboutView = ({ t, profile }) => {
           <div class="flip__inner">
             <div class="flip__face flip__front photo">
               <div class="photo__inner">
-                <img src="${main.src}" data-i18n-attr="alt:${main.altKey}" alt="${t(main.altKey)}" loading="lazy" />
+                <img src="${main.src}" width="${main.width}" height="${main.height}" data-i18n-attr="alt:${main.altKey}" alt="${t(main.altKey)}" loading="lazy" decoding="async" />
               </div>
             </div>
             ${FlipBack(t)}
@@ -51,7 +52,7 @@ export const AboutView = ({ t, profile }) => {
         </figure>
         <figure class="photo photo--small">
           <div class="photo__inner">
-            <img src="${secondary.src}" data-i18n-attr="alt:${secondary.altKey}" alt="${t(secondary.altKey)}" loading="lazy" />
+            <img src="${secondary.src}" width="${secondary.width}" height="${secondary.height}" data-i18n-attr="alt:${secondary.altKey}" alt="${t(secondary.altKey)}" loading="lazy" decoding="async" />
           </div>
         </figure>
         <span class="about__sticker">✦ <span data-i18n="about.sticker">${t("about.sticker")}</span></span>

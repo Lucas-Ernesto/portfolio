@@ -12,6 +12,8 @@ export class ContactController {
       });
     });
 
+    qs(".js-year").textContent = new Date().getFullYear(); // o HTML pré-renderizado tem o ano do build
+
     const clock = qs(".js-time");
     const tick = () =>
       (clock.textContent = new Date().toLocaleTimeString("pt-BR", {

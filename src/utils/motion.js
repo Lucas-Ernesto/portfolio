@@ -5,10 +5,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// mouse de verdade (computador). Em celular/tablet: sem cursor-estrela, ímã e inclinação
+export const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 export { gsap, ScrollTrigger };
 
 // inclinação 3D seguindo o mouse (usada na foto e nas pastas)
 export function bindTilt(el, { strength = 10, perspective = 1200 } = {}) {
+  if (!finePointer) return; // no celular não tem "passar o mouse"
   el.addEventListener("pointermove", (e) => {
     const r = el.getBoundingClientRect();
     gsap.to(el, {

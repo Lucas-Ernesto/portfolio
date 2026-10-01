@@ -27,10 +27,14 @@
 .loader__mark circle {
   fill: var(--gold);
 }
-/* começam invisíveis; o GSAP revela */
-.loader__mark,
-.loader__name {
+/* o monograma começa invisível (se desenha);
+   o nome já aparece desfocado e entra em foco — visível desde o 1º quadro (bom pro LCP do Google) */
+.loader__mark {
   opacity: 0;
+}
+.loader__name {
+  opacity: 0.25;
+  filter: blur(12px);
 }
 .loader__name {
   font-family: var(--serif);

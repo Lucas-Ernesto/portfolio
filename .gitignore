@@ -3,3 +3,8 @@ dist/
 .DS_Store
 *.log
 _fotos/
+
+# skills/ferramentas locais (não sobem pro GitHub)
+.agents/
+.claude/skills/
+skills-lock.json

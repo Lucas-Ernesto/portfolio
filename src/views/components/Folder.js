@@ -2,7 +2,8 @@ import { STAR_PATH } from "./Logo.js";
 
 // O que sobe de dentro da pasta no hover
 const visuals = {
-  image: (v) => `<img class="folder__obj folder__obj--shot" src="${v.src}" alt="" loading="lazy" />`,
+  image: (v) =>
+    `<img class="folder__obj folder__obj--shot" src="${v.src}" width="${v.width}" height="${v.height}" alt="" loading="lazy" decoding="async" />`,
   star: () => `
     <svg class="folder__obj folder__obj--star" viewBox="0 0 24 24" aria-hidden="true">
       <defs>

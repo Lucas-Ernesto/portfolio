@@ -1,4 +1,4 @@
-import { gsap } from "../utils/motion.js";
+import { gsap, finePointer } from "../utils/motion.js";
 import { qs } from "../utils/dom.js";
 import { createCursorTrail } from "../views/webgl/CursorTrail.js";
 
@@ -10,6 +10,10 @@ import { createCursorTrail } from "../views/webgl/CursorTrail.js";
 export class CursorController {
   constructor({ t, isOverCube, reduceMotion }) {
     this.t = t;
+    // celular/tablet não tem cursor: não cria nada (economiza bateria e processamento)
+    this.enabled = finePointer;
+    if (!this.enabled) return;
+
     this.el = qs(".cursor");
     this.label = qs(".cursor__label", this.el);
     this.trail = createCursorTrail(qs(".cursor-trail"), this.el, { reduceMotion });
@@ -42,11 +46,11 @@ export class CursorController {
   }
 
   setLabel(key) {
-    this.label.textContent = this.t(key);
+    if (this.enabled) this.label.textContent = this.t(key);
   }
 
   // chuva de faíscas douradas num ponto da tela
   burst(x, y) {
-    this.trail.burst(x, y);
+    this.trail?.burst(x, y);
   }
 }

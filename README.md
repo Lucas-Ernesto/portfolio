@@ -51,6 +51,15 @@ src/
 └── utils/               atalhos de DOM e configuração do GSAP
 ```
 
+## Performance
+
+- **Pré-renderização** (`vite.config.js`): no build, as views geram o HTML do site e ele já vai pronto no `index.html`. O conteúdo aparece antes do JavaScript carregar (e o Google lê tudo).
+- **CSS dentro do HTML** e **fontes no próprio site** (`@fontsource`), sem depender do Google Fonts.
+- **Three.js carregado à parte**: o cubo vem num arquivo separado, baixado depois que a página aparece.
+- **Cubo adaptativo**: modo leve no celular (sem sombras, 30 fps) e modo mínimo automático em aparelhos sem placa de vídeo.
+- **Celular**: cursor-estrela, rastro, ímã e inclinação nem são criados (não existe mouse).
+- Imagens em WebP no tamanho em que aparecem.
+
 ## Tarefas comuns
 
 **Adicionar um projeto:** inclua um objeto em `src/models/projects.model.js` (com textos PT e EN). O card de pasta é gerado sozinho.

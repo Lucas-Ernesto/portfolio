@@ -24,7 +24,7 @@ export class IntroController {
         .fromTo(".loader__mark", { opacity: 0, scale: 0.9, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1 * d, ease: "power3.out" }, 0)
         .to(".loader__mark path", { strokeDashoffset: 0, duration: 1.3 * d, stagger: 0.2 * d, ease: "power3.inOut" }, 0.15 * d)
         .to(".loader__mark circle", { attr: { r: 4 }, duration: 1 * d, ease: "elastic.out(1, 0.45)" }, 1.35 * d)
-        .fromTo(".loader__name", { opacity: 0, y: 18, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1 * d, ease: "power3.out" }, 0.9 * d)
+        .fromTo(".loader__name", { opacity: 0.25, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 1.6 * d, ease: "power2.out" }, 0.3 * d)
         // saída: tudo flutua pra cima antes da cortina subir
         .to(".loader__mark, .loader__name", { y: -28, opacity: 0, filter: "blur(8px)", duration: 0.7 * d, stagger: 0.06, ease: "power2.in" }, "+=0.25")
         .to(".loader__count, .loader__bar", { opacity: 0, duration: 0.5 * d }, "<")

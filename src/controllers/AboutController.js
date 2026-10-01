@@ -1,5 +1,6 @@
 import { gsap, bindTilt } from "../utils/motion.js";
 import { qs, qsa } from "../utils/dom.js";
+import { wordsHTML } from "../views/components/Words.js";
 
 // Sobre: texto que acende palavra por palavra, fotos com revelação e a foto que vira
 export class AboutController {
@@ -9,22 +10,19 @@ export class AboutController {
     this.flipped = false;
 
     this.splitWords();
-    onLangChange(() => this.splitWords()); // o texto novo precisa ser quebrado de novo
+    onLangChange(() => this.splitWords(true)); // o texto novo precisa ser quebrado de novo
 
     this.revealPhotos();
     this.bindFlip();
   }
 
-  // quebra o parágrafo grande em palavras e acende cada uma conforme rola
-  splitWords() {
+  // acende cada palavra do parágrafo grande conforme rola
+  // (a view já entrega as palavras quebradas; só refaz quando o texto muda)
+  splitWords(force = false) {
     this.wordsTween?.scrollTrigger?.kill();
     this.wordsTween?.kill();
     const el = qs(".js-words");
-    el.innerHTML = el.textContent
-      .trim()
-      .split(/\s+/)
-      .map((w) => `<span class="w">${w}</span>`)
-      .join(" ");
+    if (force || !qs(".w", el)) el.innerHTML = wordsHTML(el.textContent);
     this.wordsTween = gsap.to(qsa(".w", el), {
       opacity: 1,
       stagger: 0.1,

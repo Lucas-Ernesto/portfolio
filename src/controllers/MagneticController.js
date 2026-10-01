@@ -1,9 +1,10 @@
-import { gsap } from "../utils/motion.js";
+import { gsap, finePointer } from "../utils/motion.js";
 import { qsa } from "../utils/dom.js";
 
 // Elementos com data-magnetic são "puxados" pelo mouse e voltam com efeito elástico
 export class MagneticController {
   constructor() {
+    if (!finePointer) return; // só faz sentido com mouse
     qsa("[data-magnetic]").forEach((el) => {
       const mx = gsap.quickTo(el, "x", { duration: 0.6, ease: "elastic.out(1, 0.4)" });
       const my = gsap.quickTo(el, "y", { duration: 0.6, ease: "elastic.out(1, 0.4)" });

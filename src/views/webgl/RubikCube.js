@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import gsap from "gsap";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
 // Cubo mágico 3x3 de verdade: as camadas giram, ele se embaralha e se resolve sozinho.
@@ -31,18 +30,72 @@ function roundedRectShape(size, r) {
   return shape;
 }
 
-export function createRubikCube(canvas, { reduceMotion = false } = {}) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+// "Estúdio" de reflexo barato: um gradiente 128x64 com duas janelas de luz suaves.
+// Antes era um RoomEnvironment 3D renderizado em 6 direções (custava ~1,7 s pra gerar).
+function makeStudioTexture() {
+  const c = document.createElement("canvas");
+  c.width = 128;
+  c.height = 64;
+  const g = c.getContext("2d");
+  const sky = g.createLinearGradient(0, 0, 0, 64);
+  sky.addColorStop(0, "#ffffff");
+  sky.addColorStop(0.45, "#e9e2d6");
+  sky.addColorStop(1, "#2a2622");
+  g.fillStyle = sky;
+  g.fillRect(0, 0, 128, 64);
+  for (const [x, y, r] of [
+    [34, 18, 16],
+    [92, 22, 12],
+  ]) {
+    const light = g.createRadialGradient(x, y, 0, x, y, r);
+    light.addColorStop(0, "rgba(255,255,255,1)");
+    light.addColorStop(1, "rgba(255,255,255,0)");
+    g.fillStyle = light;
+    g.fillRect(0, 0, 128, 64);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.mapping = THREE.EquirectangularReflectionMapping;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+// O aparelho desenha 3D sem placa de vídeo (no processador)? Ex.: SwiftShader, llvmpipe.
+// Nesse caso o cubo entra em modo mínimo, senão trava a página por vários segundos.
+function hasSoftwareGL() {
+  try {
+    const gl = document.createElement("canvas").getContext("webgl");
+    if (!gl) return true;
+    const info = gl.getExtension("WEBGL_debug_renderer_info");
+    const name = info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : "";
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    return /swiftshader|llvmpipe|software|basic render/i.test(name);
+  } catch {
+    return true;
+  }
+}
+
+// opções:
+//   state: objeto compartilhado com o controller (scroll e intro de 0→1)
+//   lite:  modo leve pra celular (sem sombras, resolução menor, 30 fps)
+// modo mínimo (automático, sem placa de vídeo): sem reflexos/sombras e só desenha quando algo muda
+export function createRubikCube(canvas, { reduceMotion = false, state: shared = {}, lite = false } = {}) {
+  const minimal = hasSoftwareGL();
+  if (minimal) lite = true;
+  const still = reduceMotion || minimal; // sem movimento contínuo
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !minimal, alpha: true });
+  renderer.setPixelRatio(minimal ? 1 : Math.min(window.devicePixelRatio, lite ? 1.5 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.shadowMap.enabled = true;
+  // no site publicado não precisa checar erro de shader (essa checagem força o navegador a esperar)
+  renderer.debug.checkShaderErrors = import.meta.env.DEV;
+  renderer.shadowMap.enabled = !lite;
   renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.6;
+  // reflexo suave do "estúdio" nos adesivos (desligado sem placa de vídeo)
+  const studio = minimal ? null : makeStudioTexture();
+  scene.add(new THREE.AmbientLight("#ffffff", minimal ? 0.9 : 0.35));
 
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
   camera.position.set(0, 0, 11);
@@ -50,7 +103,7 @@ export function createRubikCube(canvas, { reduceMotion = false } = {}) {
   scene.add(new THREE.HemisphereLight("#ffffff", "#d9cfc0", 0.8));
   const key = new THREE.DirectionalLight("#fff6ea", 2.2);
   key.position.set(-4, 6, 6);
-  key.castShadow = true;
+  key.castShadow = !lite;
   key.shadow.mapSize.set(1024, 1024);
   key.shadow.bias = -0.0008;
   Object.assign(key.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4 });
@@ -68,13 +121,22 @@ export function createRubikCube(canvas, { reduceMotion = false } = {}) {
   scene.add(root);
   cube.rotation.set(0.55, -0.7, 0);
 
-  const bodyGeo = new RoundedBoxGeometry(0.96, 0.96, 0.96, 4, 0.12);
-  const bodyMat = new THREE.MeshStandardMaterial({ color: "#141414", roughness: 0.35, metalness: 0.1 });
+  const bodyGeo = new RoundedBoxGeometry(0.96, 0.96, 0.96, minimal ? 2 : 4, 0.12);
+  // Phong = plástico brilhante clássico. Shader bem menor que o PBR (Standard/Physical),
+  // compila rápido até em celular fraco — antes a compilação travava a página por ~1,5 s
+  const bodyMat = new THREE.MeshPhongMaterial({ color: "#141414", specular: "#3a3a3a", shininess: 40 });
   const stickerGeo = new THREE.ShapeGeometry(roundedRectShape(0.8, 0.14), 6);
   const stickerMats = Object.fromEntries(
     Object.entries(FACE_COLORS).map(([k, c]) => [
       k,
-      new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.15 }),
+      new THREE.MeshPhongMaterial({
+        color: c,
+        specular: "#5a5a5a",
+        shininess: 90,
+        envMap: studio,
+        reflectivity: 0.12,
+        combine: THREE.MixOperation,
+      }),
     ]),
   );
   const faces = [
@@ -178,19 +240,20 @@ export function createRubikCube(canvas, { reduceMotion = false } = {}) {
   }
 
   // ---------- Estado / interação ----------
-  const state = {
+  // usa o objeto do controller: assim a intro/scroll funcionam mesmo antes do cubo carregar
+  const state = Object.assign(shared, {
     mouse: new THREE.Vector2(),
     look: new THREE.Vector2(),
-    scroll: 0,
-    intro: 0,
+    scroll: shared.scroll ?? 0,
+    intro: shared.intro ?? 0,
     spin: 0,
     punch: 1,
-  };
+  });
 
   // Loop sozinho: embaralha devagar e, depois de alguns movimentos, se resolve
   let cooldown = 2;
   setInterval(() => {
-    if (reduceMotion || pending > 0 || state.scroll > 0.02 || document.hidden) return;
+    if (still || pending > 0 || state.scroll > 0.02 || document.hidden) return;
     if (cooldown-- > 0) return;
     if (history.length >= 7) {
       solve();
@@ -207,9 +270,7 @@ export function createRubikCube(canvas, { reduceMotion = false } = {}) {
   }
 
   const layout = { x: 0, y: 0, scale: 1 };
-  function resize() {
-    const w = canvas.clientWidth;
-    const h = canvas.clientHeight;
+  function resize(w, h) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -225,8 +286,8 @@ export function createRubikCube(canvas, { reduceMotion = false } = {}) {
       layout.scale = Math.min(0.7, viewW / 6.6);
     }
   }
-  resize();
-  window.addEventListener("resize", resize);
+  // ResizeObserver entrega o tamanho sem forçar o navegador a recalcular o layout
+  new ResizeObserver(([entry]) => resize(entry.contentRect.width, entry.contentRect.height)).observe(canvas);
 
   const raycaster = new THREE.Raycaster();
   const ndc = new THREE.Vector2();
@@ -241,6 +302,8 @@ export function createRubikCube(canvas, { reduceMotion = false } = {}) {
 
   const t0 = performance.now();
   let running = true;
+  let frame = 0;
+  let lastKey = "";
   function tick() {
     if (!running) return;
     const t = (performance.now() - t0) / 1000;
@@ -248,7 +311,8 @@ export function createRubikCube(canvas, { reduceMotion = false } = {}) {
     const intro = state.intro;
 
     state.look.lerp(state.mouse, 0.05);
-    tilt.rotation.y = state.look.x * 0.5 + state.spin + t * 0.08;
+    const idle = still ? 0 : t; // giro lento e flutuação só com placa de vídeo
+    tilt.rotation.y = state.look.x * 0.5 + state.spin + idle * 0.08;
     tilt.rotation.x = -state.look.y * 0.35;
 
     // explode: as peças se afastam conforme o hero sai da tela
@@ -257,20 +321,35 @@ export function createRubikCube(canvas, { reduceMotion = false } = {}) {
       cubies.forEach((c) => c.position.copy(c.userData.home).multiplyScalar(spread));
     }
 
-    root.position.set(layout.x, layout.y - (1 - intro) * 3 + s * 2.2 + Math.sin(t * 1.2) * 0.06, 0);
+    root.position.set(layout.x, layout.y - (1 - intro) * 3 + s * 2.2 + Math.sin(idle * 1.2) * 0.06, 0);
     root.rotation.z = (1 - intro) * 0.6;
     root.rotation.x = s * 0.8;
     root.scale.setScalar(layout.scale * (0.4 + intro * 0.6) * state.punch * (1 - s * 0.2));
 
-    renderer.render(scene, camera);
+    // no modo leve desenha 1 quadro sim, 1 não (30 fps)
+    if (minimal) {
+      // só redesenha quando algo mudou (intro, scroll, mouse, clique, camada girando)
+      const sig = `${intro.toFixed(3)}|${s.toFixed(3)}|${state.look.x.toFixed(3)}|${state.look.y.toFixed(3)}|${state.spin.toFixed(2)}|${state.punch.toFixed(3)}|${turning}|${camera.aspect}`;
+      if (sig !== lastKey) renderer.render(scene, camera);
+      lastKey = sig;
+    } else if (!lite || (frame++ & 1) === 0) renderer.render(scene, camera);
     requestAnimationFrame(tick);
   }
-  tick();
+
+  // compila os shaders em segundo plano (sem travar a página) e só então começa a desenhar
+  let ready = false;
+  renderer
+    .compileAsync(scene, camera)
+    .catch(() => {})
+    .then(() => {
+      ready = true;
+      if (running) tick();
+    });
 
   new IntersectionObserver(([entry]) => {
     const was = running;
     running = entry.isIntersecting;
-    if (running && !was) tick();
+    if (ready && running && !was) tick();
   }).observe(canvas);
 
   // x/y de -1 a 1 (posição do mouse na janela); quem chama é o HeroController
