@@ -1,0 +1,105 @@
+/* ---------- Contato ---------- */
+.contact {
+  background: var(--ink);
+  color: var(--bg);
+  padding: clamp(96px, 12vw, 160px) var(--pad) var(--pad);
+  border-radius: clamp(24px, 4vw, 48px) clamp(24px, 4vw, 48px) 0 0;
+}
+.contact__title {
+  font-size: clamp(56px, 10vw, 180px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+}
+.contact__mail {
+  margin-top: clamp(40px, 6vw, 80px);
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 100%;
+  font-size: clamp(20px, 3.4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  position: relative;
+  padding-bottom: 8px;
+  overflow-wrap: anywhere;
+}
+.contact__mail::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0.15);
+  transform-origin: left;
+  transition: transform 0.8s var(--ease);
+}
+.contact__mail:hover::after {
+  transform: scaleX(1);
+}
+.contact__arrow {
+  color: var(--gold);
+  transition: transform 0.6s var(--ease);
+}
+.contact__mail:hover .contact__arrow {
+  transform: rotate(45deg);
+}
+.contact__toast {
+  height: 20px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--gold-soft);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.contact__toast.is-on {
+  opacity: 1;
+}
+.contact__socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(40px, 6vw, 80px);
+}
+.social {
+  border: 1px solid rgba(243, 241, 236, 0.2);
+  border-radius: 999px;
+  padding: 14px 24px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease), border-color 0.4s;
+}
+.social span {
+  display: inline-block;
+  transition: transform 0.4s var(--ease);
+}
+.social:hover {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--bg);
+}
+.social:hover span {
+  transform: rotate(45deg);
+}
+.footer {
+  margin-top: clamp(80px, 12vw, 160px);
+  padding-top: 20px;
+  border-top: 1px solid rgba(243, 241, 236, 0.15);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: rgba(243, 241, 236, 0.55);
+}
+.footer__top:hover {
+  color: var(--bg);
+}
+
+@media (max-width: 800px) {
+  .footer {
+    flex-direction: column;
+  }
+}

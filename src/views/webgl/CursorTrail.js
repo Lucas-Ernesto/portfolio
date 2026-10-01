@@ -18,7 +18,8 @@ function drawStar(ctx, x, y, r, rot) {
   ctx.restore();
 }
 
-export function initCursorTrail(cursor, canvas, { reduceMotion = false } = {}) {
+// cursor = elemento da estrela; o rastro segue a posição/opacidade dele (animadas pelo CursorController)
+export function createCursorTrail(canvas, cursor, { reduceMotion = false } = {}) {
   const ctx = canvas.getContext("2d");
   let dpr = 1;
   const resize = () => {
@@ -28,15 +29,6 @@ export function initCursorTrail(cursor, canvas, { reduceMotion = false } = {}) {
   };
   resize();
   window.addEventListener("resize", resize);
-
-  // mostra a estrela / esconde a setinha só quando for mouse de verdade
-  window.addEventListener("pointermove", (e) => {
-    if (e.pointerType === "mouse") document.documentElement.classList.add("has-cursor");
-  });
-  window.addEventListener("pointerdown", () => cursor.classList.add("is-down"));
-  window.addEventListener("pointerup", () => cursor.classList.remove("is-down"));
-  document.addEventListener("mouseleave", () => gsap.to(cursor, { opacity: 0, duration: 0.3 }));
-  document.addEventListener("mouseenter", () => gsap.to(cursor, { opacity: 1, duration: 0.3 }));
 
   const points = [];
   const sparks = [];

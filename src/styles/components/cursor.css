@@ -1,0 +1,99 @@
+/* ---------- Cursor ---------- */
+/* esconde a setinha nativa só em quem tem mouse de verdade */
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 94;
+}
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 95;
+}
+.cursor__star {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  left: -11px;
+  top: -11px;
+  color: var(--gold);
+  filter: drop-shadow(0 0 6px rgba(201, 164, 106, 0.55));
+  transition: transform 0.5s var(--ease), opacity 0.3s;
+}
+.cursor__star svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  animation: starSpin 6s linear infinite;
+}
+@keyframes starSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.cursor.is-hover .cursor__star {
+  transform: scale(1.9);
+}
+.cursor.is-hover .cursor__star svg {
+  animation-duration: 1.5s;
+}
+/* estrela branca = "aqui dá pra clicar" (botão dourado, avatar, foto, projetos) */
+.cursor.is-on-btn .cursor__star,
+.cursor.is-label .cursor__star {
+  color: #fff;
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+}
+.cursor.is-label .cursor__star {
+  transform: scale(1.9);
+}
+.cursor.is-label .cursor__star svg {
+  animation-duration: 1.5s;
+}
+.cursor.is-down .cursor__star {
+  transform: scale(0.7);
+}
+.cursor__label {
+  position: absolute;
+  left: 26px;
+  top: 14px;
+  white-space: nowrap;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateX(-8px) scale(0.8);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease), opacity 0.3s;
+}
+.cursor.is-label .cursor__label {
+  opacity: 1;
+  transform: none;
+}
+@media (hover: none) {
+  .cursor,
+  .cursor-trail {
+    display: none;
+  }
+}
+
+/* cursor no fundo escuro */
+.cursor.is-dark .cursor__label {
+  background: var(--gold);
+  color: var(--ink);
+}

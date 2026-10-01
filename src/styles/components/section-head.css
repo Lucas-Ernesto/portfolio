@@ -1,0 +1,21 @@
+/* ---------- Cabeçalho das seções ---------- */
+.section-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: clamp(40px, 6vw, 80px);
+}
+.section-head__num {
+  color: var(--gold);
+}
+.section-head--light {
+  color: rgba(243, 241, 236, 0.55);
+  border-color: rgba(243, 241, 236, 0.15);
+}

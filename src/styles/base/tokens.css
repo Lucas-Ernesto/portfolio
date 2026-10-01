@@ -1,0 +1,16 @@
+/* Cores, fontes e medidas usadas no site todo */
+:root {
+  --bg: #f3f1ec;
+  --bg-2: #e9e6df;
+  --ink: #111111;
+  --muted: #6d6a64;
+  --line: rgba(17, 17, 17, 0.12);
+  --gold: #b08d57;
+  --gold-soft: #d8c29a;
+
+  --serif: "Instrument Serif", Georgia, serif;
+  --sans: "Manrope", system-ui, sans-serif;
+
+  --pad: clamp(16px, 3vw, 40px);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}

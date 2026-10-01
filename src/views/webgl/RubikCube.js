@@ -31,7 +31,7 @@ function roundedRectShape(size, r) {
   return shape;
 }
 
-export function createCube(canvas, { reduceMotion = false } = {}) {
+export function createRubikCube(canvas, { reduceMotion = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -228,16 +228,13 @@ export function createCube(canvas, { reduceMotion = false } = {}) {
   resize();
   window.addEventListener("resize", resize);
 
-  window.addEventListener("pointermove", (e) => {
-    state.mouse.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
-  });
-
   const raycaster = new THREE.Raycaster();
   const ndc = new THREE.Vector2();
-  function hitTest(e) {
+  // o ponto da tela (em px) está em cima do cubo?
+  function hitTest(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
-    if (e.clientY > rect.bottom || e.clientY < rect.top) return false;
-    ndc.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+    if (clientY > rect.bottom || clientY < rect.top) return false;
+    ndc.set(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
     raycaster.setFromCamera(ndc, camera);
     return raycaster.intersectObject(cube, true).length > 0;
   }
@@ -276,5 +273,9 @@ export function createCube(canvas, { reduceMotion = false } = {}) {
     if (running && !was) tick();
   }).observe(canvas);
 
-  return { state, hitTest, poke };
+  // x/y de -1 a 1 (posição do mouse na janela); quem chama é o HeroController
+  const setPointer = (x, y) => state.mouse.set(x, y);
+
+  // state.scroll (0→1) e state.intro (0→1) são animados pelos controllers
+  return { state, hitTest, poke, setPointer };
 }

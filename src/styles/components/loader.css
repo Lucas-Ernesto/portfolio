@@ -1,0 +1,61 @@
+/* ---------- Loader ---------- */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--bg);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 24px;
+}
+.loader__mark {
+  width: 64px;
+  height: 64px;
+  overflow: visible;
+}
+.loader__mark path {
+  stroke: var(--bg);
+  stroke-width: 5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.loader__mark circle {
+  fill: var(--gold);
+}
+/* começam invisíveis; o GSAP revela */
+.loader__mark,
+.loader__name {
+  opacity: 0;
+}
+.loader__name {
+  font-family: var(--serif);
+  font-size: clamp(40px, 7vw, 96px);
+  line-height: 1;
+}
+.loader__count {
+  position: absolute;
+  right: var(--pad);
+  bottom: var(--pad);
+  font-size: clamp(48px, 10vw, 140px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 0.8;
+}
+.loader__bar {
+  width: min(280px, 60vw);
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+}
+.loader__bar span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+}

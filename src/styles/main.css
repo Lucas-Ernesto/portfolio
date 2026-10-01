@@ -1,0 +1,15 @@
+/* Ordem importa: tokens → base → componentes → seções */
+@import "./base/tokens.css";
+@import "./base/reset.css";
+@import "./base/utilities.css";
+@import "./components/button.css";
+@import "./components/section-head.css";
+@import "./components/loader.css";
+@import "./components/cursor.css";
+@import "./components/nav.css";
+@import "./sections/hero.css";
+@import "./sections/strip.css";
+@import "./sections/about.css";
+@import "./sections/work.css";
+@import "./sections/stack.css";
+@import "./sections/contact.css";

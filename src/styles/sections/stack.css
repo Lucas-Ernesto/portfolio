@@ -1,0 +1,48 @@
+/* ---------- Stack ---------- */
+.stack {
+  padding: clamp(60px, 8vw, 120px) 0 clamp(100px, 12vw, 180px);
+  overflow: hidden;
+}
+.stack .section-head {
+  margin-inline: var(--pad);
+}
+.stack__rows {
+  display: grid;
+  gap: 8px;
+}
+.stack__row {
+  white-space: nowrap;
+}
+.stack__track {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 48px);
+  padding-right: clamp(20px, 3vw, 48px);
+  font-size: clamp(48px, 9vw, 150px);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+  will-change: transform;
+}
+.stack__track span {
+  transition: color 0.3s;
+}
+.stack__track span:hover {
+  color: var(--gold);
+  font-family: var(--serif);
+  font-style: italic;
+  letter-spacing: -0.02em;
+}
+.stack__track i {
+  font-style: normal;
+  color: var(--line);
+  font-weight: 300;
+}
+.stack__row--rev .stack__track {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--ink);
+}
+.stack__row--rev .stack__track span:hover {
+  color: var(--gold);
+  -webkit-text-stroke: 0;
+}
